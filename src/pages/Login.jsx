@@ -11,7 +11,7 @@ const Login = () => {
   const onFinish = async (values) => {
     setLoading(true)
     try {
-      const { data } = await axios.post('http://localhost:8080/api/auth/login', values)
+      const { data } = await axios.post('https://orchidspring2.onrender.com/api/auth/login', values)
       localStorage.setItem('user', JSON.stringify(data))
       if(data) navigate('/')
     } catch (error) {
