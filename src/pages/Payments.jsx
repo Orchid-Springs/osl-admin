@@ -6,12 +6,11 @@ import dayjs from 'dayjs';
 
 const Payments = () => {
   const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
   const [payment, setPayments] = useState([]); 
 
   useEffect(()=> {
     const fetchData = async() => {
-        const { data } = await axios.get(`https://orchidspring2.onrender.com/api/payment/all`);
+        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/payment/all`);
         setPayments(data)
     }
     fetchData()

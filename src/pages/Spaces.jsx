@@ -13,7 +13,6 @@ const Spaces = () => {
   const [addLoading, setAddLoading] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [workingId, setWorkingId] = useState('');
-  const [defaultSpace, setDefaultSpace] = useState({})
   const [editLoading, setEditLoading] = useState(false);
 
   const [addForm] = Form.useForm();
@@ -27,7 +26,7 @@ const Spaces = () => {
         if(values)  setAddModalOpen(false)
 
         const options = {
-            url: 'https://orchidspring2.onrender.com/api/space',
+            url: 'https://orchidsprings.cyclic.cloud/api/space',
             method: 'POST',
             headers: {
             'Accept': 'application/json',
@@ -63,7 +62,7 @@ const Spaces = () => {
 
   const showEditModal = async (id) => {
     try {
-        const { data } = await axios.get(`https://orchidspring2.onrender.com/api/space/${id}`) 
+        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/space/${id}`) 
 
         if(data) {
             editForm.setFieldsValue({ name: data?.name, type: data?.type, seat_number: data?.seat_number, price: data?.price, description: data?.description })
@@ -76,7 +75,7 @@ const Spaces = () => {
   }
 
   const handleSpaceDelete = async (id) => {
-    axios.delete(`https://orchidspring2.onrender.com/api/space/${id}`)
+    axios.delete(`https://orchidsprings.cyclic.cloud/api/space/${id}`)
         .then(response => {
             // console.log(response);
             message.success('Space deleted');
@@ -95,7 +94,7 @@ const Spaces = () => {
         setEditLoading(true)
         const values = await editForm.validateFields()
         if(workingId) {
-            const {data} = await axios.patch(`https://orchidspring2.onrender.com/api/space/${workingId}`, values)
+            const {data} = await axios.patch(`https://orchidsprings.cyclic.cloud/api/space/${workingId}`, values)
             if(data) setEditModalOpen(false)
         }
     } catch (error) {
@@ -107,8 +106,12 @@ const Spaces = () => {
 
   useEffect(()=> {
     const fetchData = async() => {
-        const { data } = await axios.get(`https://orchidspring2.onrender.com/api/space`);
-        setSpaces(data)
+        try {
+            const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/space`);
+            setSpaces(data)
+        } catch (error) {
+            console.log(error)
+        }
     }
     fetchData()
   }, [spaces])

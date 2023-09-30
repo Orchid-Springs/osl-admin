@@ -10,7 +10,7 @@ const Reservations = () => {
 
   useEffect(()=> {
     const fetchData = async() => {
-        const { data } = await axios.get(`https://orchidspring2.onrender.com/api/reservation/people`);
+        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/reservation/people`);
         setReservations(data)
     }
     fetchData()

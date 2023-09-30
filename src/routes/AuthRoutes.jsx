@@ -6,6 +6,7 @@ import Spaces from "../pages/Spaces"
 import Promo from "../pages/Promo"
 import NoMatch from "../pages/NoMatch"
 import { AuthProvider } from "../context/auth"
+import AddUser from "../pages/AddUser"
 
 const AuthRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const AuthRoutes = () => {
               <Route path='/reservations' element={<Reservations />} />
               <Route path='/spaces' element={<Spaces />} />
               <Route path='/promo' element={<Promo />} />
+              <Route path='/user' element={<AddUser />} />
             </Route>
             <Route path='*' element={<NoMatch />} />
 

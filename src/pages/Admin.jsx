@@ -4,10 +4,11 @@ import {
   FundProjectionScreenOutlined,
   TeamOutlined,
   CalendarOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import favicon from '../assets/favicon.png';
 
-import { Layout, Menu, theme, Avatar, Button } from 'antd';
+import { Layout, Menu, Avatar, Button } from 'antd';
 import Overview from '../components/Overview';
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/auth';
@@ -21,18 +22,30 @@ function getItem(label, key, icon, children) {
     label,
   };
 }
-const items = [
-  getItem(<Link to='/payments' >Payments</Link>, '1', <PieChartOutlined />),
-  getItem(<Link to='/reservations' >Reservations</Link>, '2', <CalendarOutlined />),
-  getItem(<Link to='/spaces' >Spaces</Link>, '3', <TeamOutlined />),
-  getItem(<Link to='/promo' >Promos</Link>, '4', <FundProjectionScreenOutlined />),
-];
+
+// const items = [
+//   getItem(<Link to='/payments' >Payments</Link>, '1', <PieChartOutlined />),
+//   getItem(<Link to='/reservations' >Reservations</Link>, '2', <CalendarOutlined />),
+//   getItem(<Link to='/spaces' >Spaces</Link>, '3', <TeamOutlined />),
+//   getItem(<Link to='/promo' >Promos</Link>, '4', <FundProjectionScreenOutlined />),
+//   UserRole.user.role !== 'super_admin' ? 
+//   getItem(<Link to='/user' >Users</Link>, '5', <UserOutlined />) : " ",
+// ];
 
 const Admin = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [loading, setLoading] = useState(false);
   const auth = useAuth();
   const avatarName = auth?.user?.username[0] + auth?.user?.username[1] || 'I'
+
+  const items = [
+    getItem(<Link to='/payments' >Payments</Link>, '1', <PieChartOutlined />),
+    getItem(<Link to='/reservations' >Reservations</Link>, '2', <CalendarOutlined />),
+    getItem(<Link to='/spaces' >Spaces</Link>, '3', <TeamOutlined />),
+    getItem(<Link to='/promo' >Promos</Link>, '4', <FundProjectionScreenOutlined />),
+    auth.user.role === 'super_admin' ? 
+    getItem(<Link to='/user' >Users</Link>, '5', <UserOutlined />) : " ",
+  ];
 
   const handleLogout = () => {
     setLoading(true)
@@ -44,9 +57,9 @@ const Admin = () => {
     setLoading(false)
   }
 
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+  // const {
+  //   token: { colorBgContainer },
+  // } = theme.useToken();
 
   return (
     <Layout>

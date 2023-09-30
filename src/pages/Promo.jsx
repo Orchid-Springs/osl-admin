@@ -24,7 +24,7 @@ const Promo = () => {
         if(values)  setAddModalOpen(false)
 
         const options = {
-            url: 'https://orchidspring2.onrender.com/api/promo',
+            url: 'https://orchidsprings.cyclic.cloud/api/promo',
             method: 'POST',
             headers: {
             'Accept': 'application/json',
@@ -60,7 +60,7 @@ const Promo = () => {
 
   const showEditModal = async (code) => {
     try {
-        const { data } = await axios.get(`https://orchidspring2.onrender.com/api/promo/${code}`) 
+        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/promo/${code}`) 
 
         if(data) {
             editForm.setFieldsValue({ discountPercentage: data?.discountPercentage })
@@ -73,7 +73,7 @@ const Promo = () => {
   }
 
   const handleSpaceDelete = async (code) => {
-    axios.delete(`https://orchidspring2.onrender.com/api/promo/${code}`)
+    axios.delete(`https://orchidsprings.cyclic.cloud/api/promo/${code}`)
         .then(response => {
             message.success('Promo deleted');
             setPromos((prev) => {
@@ -91,7 +91,7 @@ const Promo = () => {
         setEditLoading(true)
         const values = await editForm.validateFields()
         if(workingId) {
-            const {data} = await axios.patch(`https://orchidspring2.onrender.com/api/promo/${workingId}`, values)
+            const {data} = await axios.patch(`https://orchidsprings.cyclic.cloud/api/promo/${workingId}`, values)
             if(data) setEditModalOpen(false)
         }
     } catch (error) {
@@ -103,7 +103,7 @@ const Promo = () => {
 
   useEffect(()=> {
     const fetchData = async() => {
-        const { data } = await axios.get(`https://orchidspring2.onrender.com/api/promo`);
+        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/promo`);
         setPromos(data)
     }
     fetchData()

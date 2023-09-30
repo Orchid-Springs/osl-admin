@@ -1,12 +1,15 @@
-import { Card, Space, Col, Divider, Row } from 'antd';
+import { Space, } from 'antd';
 import { UserOutlined, CalendarOutlined, BarChartOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../context/auth';
 
 const Overview = () => {
     const [people, setPeople] = useState(0)
     const [reservation, setReservation] = useState(0)
     const [payment, setPayment] = useState(0);
+
+    const auth = useAuth();
 
     function calculateTotalAmount(data) {
         let totalAmount = 0;
@@ -22,13 +25,13 @@ const Overview = () => {
 
     useEffect(() => {
         const fetchData = async() => {
-            const { data: paymentData } = await axios.get(`https://orchidspring2.onrender.com/api/payment/all`);
-            const { data: reservationData} = await axios.get('https://orchidspring2.onrender.com/api/reservation');
-            // const deskspaces = await axios.get('https://orchidspring2.onrender.com/api/space?type=space');
-            // const roomspaces = await axios.get('https://orchidspring2.onrender.com/api/space?type=room');
-            // const officeSpaces = await axios.get('https://orchidspring2.onrender.com/api/space');
-            // const promos = await axios.get('https://orchidspring2.onrender.com/api/promo');
-            const { data: peopleData } = await axios.get('https://orchidspring2.onrender.com/api/people');
+            const { data: paymentData } = await axios.get(`https://orchidsprings.cyclic.cloud/api/payment/all`);
+            const { data: reservationData} = await axios.get('https://orchidsprings.cyclic.cloud/api/reservation');
+            // const deskspaces = await axios.get('https://orchidsprings.cyclic.cloud/api/space?type=space');
+            // const roomspaces = await axios.get('https://orchidsprings.cyclic.cloud/api/space?type=room');
+            // const officeSpaces = await axios.get('https://orchidsprings.cyclic.cloud/api/space');
+            // const promos = await axios.get('https://orchidsprings.cyclic.cloud/api/promo');
+            const { data: peopleData } = await axios.get('https://orchidsprings.cyclic.cloud/api/people');
 
 
             const total = calculateTotalAmount(paymentData);
@@ -67,15 +70,20 @@ const Overview = () => {
                 </div>
             </div>
 
-            <div className='w-[200px] h-[100px] rounded-3xl bg-white flex items-center hover:scale-105 hover:shadow-lg duration-500 cursor-pointer p-3'>
-                <div className='flex w-[80px] h-full justify-center items-center'>
-                    <BarChartOutlined className='text-4xl'/>
-                </div>
-                <div className='flex flex-col justify-evenly w-[120px] gap-5 text-center'>
-                    <h3 className='font-bold text-lg'>Payments</h3>
-                    <p className='text-base'>₦ {payment && payment }</p>
-                </div>
-            </div>
+            {
+                auth.user.role === 'super_admin' ?
+                (
+                    <div className='w-[200px] h-[100px] rounded-3xl bg-white flex items-center hover:scale-105 hover:shadow-lg duration-500 cursor-pointer p-3'>
+                        <div className='flex w-[80px] h-full justify-center items-center'>
+                            <BarChartOutlined className='text-4xl'/>
+                        </div>
+                        <div className='flex flex-col justify-evenly w-[120px] gap-5 text-center'>
+                            <h3 className='font-bold text-lg'>Payments</h3>
+                            <p className='text-base'>₦ {payment && payment }</p>
+                        </div>
+                    </div>
+                ) : ''
+            }
         </Space>
     )
 };
