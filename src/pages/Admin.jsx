@@ -5,13 +5,15 @@ import {
   TeamOutlined,
   CalendarOutlined,
   UserOutlined,
+  SettingOutlined
 } from '@ant-design/icons';
 import favicon from '../assets/favicon.png';
 
-import { Layout, Menu, Avatar, Button } from 'antd';
+import { Layout, Menu, Avatar, Button, Modal, Form, Input, message } from 'antd';
 import Overview from '../components/Overview';
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/auth';
+import axios from 'axios';
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -35,8 +37,11 @@ function getItem(label, key, icon, children) {
 const Admin = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
   const auth = useAuth();
   const avatarName = auth?.user?.username[0] + auth?.user?.username[1] || 'I'
+  const [editForm] = Form.useForm();
 
   const items = [
     getItem(<Link to='/payments' >Payments</Link>, '1', <PieChartOutlined />),
@@ -57,9 +62,38 @@ const Admin = () => {
     setLoading(false)
   }
 
-  // const {
-  //   token: { colorBgContainer },
-  // } = theme.useToken();
+  const handleEditCancel = async () => {
+    await editForm.resetFields()
+    setEditModalOpen(false);
+  }
+
+  const handleSpaceEdit = async () => {
+    try {
+        setEditLoading(true)
+        const values = await editForm.validateFields()
+        if(values) {
+          const id = auth?.user?._id
+          const { data } = await axios.patch(`https://orchidsprings.cyclic.cloud/api/people/${id}`, values)
+          if(data) {
+            setEditModalOpen(false)
+            message.success('User details updated successfully')
+          }
+        }
+    } catch (error) {
+        message.error("There was an error performing operation!")
+    }
+    setEditLoading(false)
+
+  }
+
+  const showEditModal = async () => {
+    try {
+      setEditModalOpen(true);
+      editForm.setFieldsValue({ username: auth?.user?.username })
+    } catch (error) {
+      message.error("There was an error performing operation!")
+    }
+  }
 
   return (
     <Layout>
@@ -83,6 +117,7 @@ const Admin = () => {
           <Button onClick={handleLogout} loading={loading}>
             Logout
           </Button>
+          <SettingOutlined onClick={() => showEditModal()} />
         </div>
       </Header>
         <Content
@@ -105,6 +140,60 @@ const Admin = () => {
           Orchid Springs ©2023 All rights reserved
         </Footer>
       </Layout>
+
+      <Modal 
+          title='Edit Details' 
+          open={isEditModalOpen} 
+          onOk={handleSpaceEdit} 
+          onCancel={handleEditCancel}
+          okType='default'
+          okText='Save'
+          confirmLoading={editLoading}
+      >
+        <Form 
+          layout='vertical' 
+          form={editForm}
+        >
+          <Form.Item 
+            label="Email"
+          >
+            <Input value={auth?.user?.email} readOnly />
+          </Form.Item>
+
+          <Form.Item 
+            label="Phone Number"
+          >
+            <Input value={auth?.user?.phonenumber} />
+          </Form.Item>
+
+
+          <Form.Item 
+            label="Username"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter a username',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item 
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter a new password',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Layout>
   );
 };

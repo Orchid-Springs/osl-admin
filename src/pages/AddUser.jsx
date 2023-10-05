@@ -21,9 +21,11 @@ const AddUser = () => {
 
   return (
         <Form layout='vertical' 
+        title='Add User Form'
         form={form} 
         onFinish={onFinish}
         className='max-w-[500px] my-10 border border-[#001529]-500 p-4 rounded-lg'>
+        <h2 className='text-center font-bold text-2xl'>Add User Form</h2>
         <Form.Item 
             label="Username"
             name="username"

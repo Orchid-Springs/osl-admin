@@ -80,7 +80,7 @@ const Spaces = () => {
             // console.log(response);
             message.success('Space deleted');
             setSpaces((prev) => {
-                return prev.filter(space => space._id != id )
+                return prev.filter(space => space._id !== id )
             })
         })
         .catch(error => {
