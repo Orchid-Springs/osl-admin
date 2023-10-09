@@ -5,7 +5,8 @@ import {
   TeamOutlined,
   CalendarOutlined,
   UserOutlined,
-  SettingOutlined
+  SettingOutlined,
+  MailOutlined
 } from '@ant-design/icons';
 import favicon from '../assets/favicon.png';
 
@@ -48,8 +49,9 @@ const Admin = () => {
     getItem(<Link to='/reservations' >Reservations</Link>, '2', <CalendarOutlined />),
     getItem(<Link to='/spaces' >Spaces</Link>, '3', <TeamOutlined />),
     getItem(<Link to='/promo' >Promos</Link>, '4', <FundProjectionScreenOutlined />),
+    getItem(<Link to='/contacts' >Contacts</Link>, '5', <MailOutlined />),
     auth.user.role === 'super_admin' ? 
-    getItem(<Link to='/user' >Users</Link>, '5', <UserOutlined />) : " ",
+    getItem(<Link to='/user' >Users</Link>, '6', <UserOutlined />) : " ",
   ];
 
   const handleLogout = () => {
