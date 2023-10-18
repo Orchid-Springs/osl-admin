@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Input, Table } from 'antd';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import EmailLink from '../components/EmailLink';
 
 
 const Contacts = () => {
@@ -54,7 +55,7 @@ const Contacts = () => {
       title: 'Messages',
       dataIndex: 'message',
       key: '_id',
-      render: (msgs) => msgs?.map((msg,i) => <><p key={i} className='font-bold'>{msg}</p></>)
+      render: (msgs) => msgs?.map((msg,i) => <><p key={i} className='text-xs'>{msg}</p> <br></br></>)
     },
     {
       title: 'Date',
@@ -66,7 +67,7 @@ const Contacts = () => {
       title: '',
       dataIndex: 'email',
       key: '_id',
-      render: (email) => `<a href="mailto:${email}"> Reply </a>`
+      render: (email) => <EmailLink email={email} />
     },
   ];
   return (
