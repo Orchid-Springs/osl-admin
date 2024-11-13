@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Select, Button, message } from 'antd';
-import axios from 'axios';
+import { api } from '../api/api';
 
 const AddUser = () => {
     const [form] = Form.useForm();
@@ -9,7 +9,7 @@ const AddUser = () => {
     const onFinish = async (values) => {
         setLoading(true)
         try {
-          const { data } = await axios.post('https://orchidsprings.cyclic.cloud/api/auth/register', values)
+          const { data } = await api.post('/auth/register', values)
   
           if(data) message.success("User created successfully")
         } catch (error) {

@@ -75,7 +75,7 @@ const Admin = () => {
         const values = await editForm.validateFields()
         if(values) {
           const id = auth?.user?._id
-          const { data } = await axios.patch(`https://orchidsprings.cyclic.cloud/api/people/${id}`, values)
+          const { data } = await axios.patch(`http://localhost:8080/api/people/${id}`, values)
           if(data) {
             setEditModalOpen(false)
             message.success('User details updated successfully')
@@ -139,7 +139,7 @@ const Admin = () => {
             textAlign: 'center',
           }}
         >
-          Orchid Springs ©2023 All rights reserved
+          Orchid Springs ©{new Date().getFullYear()} All rights reserved
         </Footer>
       </Layout>
 

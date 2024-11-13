@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal, Select, Table, message, Popconfirm, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import axios from 'axios';
 import dayjs from 'dayjs';
+import { api } from '../api/api';
 
 
 const Promo = () => {
@@ -23,29 +23,19 @@ const Promo = () => {
         const values = await addForm.validateFields();
         if(values)  setAddModalOpen(false)
 
-        const options = {
-            url: 'https://orchidsprings.cyclic.cloud/api/promo',
-            method: 'POST',
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8'
-            },
-            data: values
-        };
-        
-        axios(options)
-        .then(response => {
-            message.success('Promo Added Succesfully')
-            setPromos((prev) => {
-                return [...prev, response.data]
-            })
-            addForm.resetFields()
-        }).catch(err => {
-            message.error('There was an error adding space')
-            addForm.resetFields()
-        });     
+            const { data } = await api.post(`/promo`, values)
+
+
+            if(data) {
+                message.success('Promo Added Succesfully')
+                setPromos((prev) => {
+                    return [...prev, data]
+                })
+                addForm.resetFields()
+            }    
     } catch (error) {
-        
+        message.error('There was an error adding space')
+            addForm.resetFields()
     }
     setAddLoading(false)
   }
@@ -60,7 +50,7 @@ const Promo = () => {
 
   const showEditModal = async (code) => {
     try {
-        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/promo/${code}`) 
+        const { data } = await api.get(`/promo/${code}`) 
 
         if(data) {
             editForm.setFieldsValue({ discountPercentage: data?.discountPercentage })
@@ -73,7 +63,7 @@ const Promo = () => {
   }
 
   const handleSpaceDelete = async (code) => {
-    axios.delete(`https://orchidsprings.cyclic.cloud/api/promo/${code}`)
+    api.delete(`/promo/${code}`)
         .then(response => {
             message.success('Promo deleted');
             setPromos((prev) => {
@@ -91,7 +81,7 @@ const Promo = () => {
         setEditLoading(true)
         const values = await editForm.validateFields()
         if(workingId) {
-            const {data} = await axios.patch(`https://orchidsprings.cyclic.cloud/api/promo/${workingId}`, values)
+            const {data} = await api.patch(`/promo/${workingId}`, values)
             if(data) setEditModalOpen(false)
         }
     } catch (error) {
@@ -103,7 +93,7 @@ const Promo = () => {
 
   useEffect(()=> {
     const fetchData = async() => {
-        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/promo`);
+        const { data } = await api.get(`/promo`);
         setPromos(data)
     }
     fetchData()

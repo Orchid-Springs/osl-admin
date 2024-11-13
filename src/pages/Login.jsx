@@ -11,7 +11,8 @@ const Login = () => {
   const onFinish = async (values) => {
     setLoading(true)
     try {
-      const { data } = await axios.post('https://orchidsprings.cyclic.cloud/api/auth/login', values)
+      const { data } = await axios.post('http://localhost:8000/api/auth/login', values)
+      // https://orchidsprings.cyclic.cloud/
       localStorage.setItem('user', JSON.stringify(data))
       if(data) navigate('/')
     } catch (error) {

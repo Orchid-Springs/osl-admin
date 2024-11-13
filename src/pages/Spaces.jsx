@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal, Select, Table, message, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import TextArea from 'antd/es/input/TextArea';
+import { api } from '../api/api';
+import { useFetchData } from '../hooks/useQueries';
 
 
 const Spaces = () => {
@@ -25,33 +26,40 @@ const Spaces = () => {
         const values = await addForm.validateFields();
         if(values)  setAddModalOpen(false)
 
-        const options = {
-            url: 'https://orchidsprings.cyclic.cloud/api/space',
-            method: 'POST',
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8'
-            },
-            data: values
-        };
-        
-        axios(options)
-        .then(response => {
-            message.success('New Space Added Succesfully')
-            setSpaces((prev) => {
-                return [...prev, response.data]
-            })
-            addForm.resetFields()
-        }).catch(err => {
-            message.error('There was an error adding space')
-            addForm.resetFields()
-        });
+            api.post(`/space`, values).then(data => {
+                message.success('New Space Added Succesfully')
+                setSpaces((prev) => {
+                    return [...prev, data]
+                })
+                addForm.resetFields()
+            }).catch(err => {
+                message.error('There was an error adding space')
+                addForm.resetFields()
+            });
         
     } catch (error) {
         message.error('There was an error performing operation')
     }
     setAddLoading(false)
   }
+
+// const { mutate: addSpace } = useAddSpace(() => {
+//     setAddModalOpen(false);
+//     addForm.resetFields();
+//   });
+
+//   const handleAddOk = async () => {
+//     try {
+//       setAddLoading(true);
+//       const values = await addForm.validateFields();
+//       addSpace(values);
+//     } catch (error) {
+//       message.error('There was an error performing operation');
+//     } finally {
+//       setAddLoading(false);
+//     }
+//   };
+
   const handleAddCancel = () => setAddModalOpen(false)
   const showAddModal = () => setAddModalOpen(true)
   
@@ -62,7 +70,7 @@ const Spaces = () => {
 
   const showEditModal = async (id) => {
     try {
-        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/space/${id}`) 
+        const { data } = await api.get(`/space/${id}`) 
 
         if(data) {
             editForm.setFieldsValue({ name: data?.name, type: data?.type, seat_number: data?.seat_number, price: data?.price, description: data?.description })
@@ -75,9 +83,8 @@ const Spaces = () => {
   }
 
   const handleSpaceDelete = async (id) => {
-    axios.delete(`https://orchidsprings.cyclic.cloud/api/space/${id}`)
+    api.delete(`/space/${id}`)
         .then(response => {
-            // console.log(response);
             message.success('Space deleted');
             setSpaces((prev) => {
                 return prev.filter(space => space._id !== id )
@@ -94,7 +101,7 @@ const Spaces = () => {
         setEditLoading(true)
         const values = await editForm.validateFields()
         if(workingId) {
-            const {data} = await axios.patch(`https://orchidsprings.cyclic.cloud/api/space/${workingId}`, values)
+            const {data} = await api.patch(`/space/${workingId}`, values)
             if(data) setEditModalOpen(false)
         }
     } catch (error) {
@@ -104,17 +111,11 @@ const Spaces = () => {
 
   }
 
-  useEffect(()=> {
-    const fetchData = async() => {
-        try {
-            const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/space`);
-            setSpaces(data)
-        } catch (error) {
-            console.log(error)
-        }
+  const { isLoading: isGettingSpace } = useFetchData('/space', {
+    onSuccess: (data) => {
+      setSpaces(data)
     }
-    fetchData()
-  }, [spaces])
+  });
 
 
 const columns = [
@@ -198,6 +199,7 @@ const columns = [
                         position: ['topRight'],
                     }} 
                     dataSource={spaces} 
+                    loading={isGettingSpace}
                 />
             </div>
             <Modal 

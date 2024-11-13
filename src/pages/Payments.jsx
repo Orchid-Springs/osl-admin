@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Input, Table } from 'antd';
-import axios from 'axios';
 import dayjs from 'dayjs';
-
+import { useFetchData } from '../hooks/useQueries';
 
 const Payments = () => {
   const [searchText, setSearchText] = useState('');
-  const [payment, setPayments] = useState([]); 
+  const [payments, setPayments] = useState([]); 
 
-  useEffect(()=> {
-    const fetchData = async() => {
-        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/payment/all`);
-        setPayments(data)
+  const { isLoading: paymentLoading } = useFetchData('/payment/all', {
+    onSuccess: (data) => {
+      setPayments(data);
     }
-    fetchData()
-  }, [])
-
+  });
 
   const columns = [
     {
@@ -30,19 +26,18 @@ const Payments = () => {
       key: '_id',
       filteredValue: [searchText],
       onFilter: (value, record) => {
-        return record?.person_id?.firstname.toString().toLowerCase().includes(value.toLowerCase()) ||
-        record?.person_id?.lastname.toString().toLowerCase().includes(value.toLowerCase()) ||
-        record?.person_id?.email.toString().toLowerCase().includes(value.toLowerCase()) ||
-        record?.tx_ref.toString().toLowerCase().includes(value.toLowerCase()) ||
-        dayjs(record?.createdAt).format('DD/MM/YYYY').toString().toLowerCase().includes(value.toLowerCase())
+        return record?.person_id?.firstname.toLowerCase().includes(value.toLowerCase()) ||
+          record?.person_id?.lastname.toLowerCase().includes(value.toLowerCase()) ||
+          record?.person_id?.email.toLowerCase().includes(value.toLowerCase()) ||
+          record?.tx_ref.toLowerCase().includes(value.toLowerCase()) ||
+          dayjs(record?.createdAt).format('DD/MM/YYYY').toLowerCase().includes(value.toLowerCase());
       }, 
-      render: (person) =>  person?.firstname + " " + person?.lastname,
-    
+      render: (person) => person?.firstname + " " + person?.lastname,
     },
     {
       title: 'Email',
       dataIndex: 'person_id',
-      render: (person) =>  person?.email,
+      render: (person) => person?.email,
       key: '_id',
     },
     {
@@ -53,19 +48,19 @@ const Payments = () => {
       sortDirections: ['descend', 'ascend'],
     },
     {
-        title: 'Transaction Reference',
-        dataIndex: 'tx_ref',
-        key: '_id',
+      title: 'Transaction Reference',
+      dataIndex: 'tx_ref',
+      key: '_id',
     },
     {
-        title: 'Transaction ID',
-        dataIndex: 'transaction_id',
-        key: '_id',
+      title: 'Transaction ID',
+      dataIndex: 'transaction_id',
+      key: '_id',
     },
     {
-        title: 'Status',
-        dataIndex: 'status',
-        key: '_id',
+      title: 'Status',
+      dataIndex: 'status',
+      key: '_id',
     },
     {
       title: 'Date',
@@ -74,28 +69,27 @@ const Payments = () => {
       render: (date) => dayjs(date).format('DD/MM/YYYY')
     },
   ];
+
   return (
-        <div className='bg-white p-5'>
-            <div className='w-[80%] p-3'>
-             <Input.Search 
-                placeholder='Search here...'
-                onSearch={(value) => {
-                    setSearchText(value)
-                }}
-                onChange={(e) => {
-                    setSearchText(e.target.value)
-                }}
-            />
-            </div>
-            <Table 
-              bordered 
-              columns={columns} 
-              dataSource={payment}
-              pagination={{
-                position: ['topRight'],
-              }}  
-            />
-        </div>
-    );
+    <div className='bg-white p-5'>
+      <div className='w-[80%] p-3'>
+        <Input.Search 
+          placeholder='Search here...'
+          onSearch={(value) => setSearchText(value)}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+      </div>
+      <Table 
+        bordered 
+        loading={paymentLoading}
+        columns={columns} 
+        dataSource={payments}
+        pagination={{
+          position: ['topRight'],
+        }}  
+      />
+    </div>
+  );
 };
+
 export default Payments;

@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Input, Table } from 'antd';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import EmailLink from '../components/EmailLink';
+import { useFetchData } from '../hooks/useQueries';
 
 
 const Contacts = () => {
   const [searchText, setSearchText] = useState('');
   const [contacts, setContacts] = useState([]); 
 
-  useEffect(()=> {
-    const fetchData = async() => {
-        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/contact`);
-        setContacts(data)
+
+  const { isLoading } = useFetchData('/contact', {
+    onSuccess: (data) => {
+      setContacts(data)
     }
-    fetchData()
-  }, [])
+  });
 
 
   const columns = [
@@ -86,6 +85,7 @@ const Contacts = () => {
             <Table 
               tableLayout='auto' 
               bordered 
+              loading={isLoading}
               columns={columns} 
               dataSource={contacts}
               pagination={{

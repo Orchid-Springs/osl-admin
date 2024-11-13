@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Input, Table } from 'antd';
-import axios from 'axios';
 import dayjs from 'dayjs';
+import { useFetchData } from '../hooks/useQueries';
 
 
 const Reservations = () => {
   const [searchText, setSearchText] = useState('');
   const [reservations, setReservations] = useState([]); 
 
-  useEffect(()=> {
-    const fetchData = async() => {
-        const { data } = await axios.get(`https://orchidsprings.cyclic.cloud/api/reservation/people`);
-        setReservations(data)
+  const { isLoading: reservationLoading } = useFetchData('/reservation/people', {
+    onSuccess: (data) => {
+      setReservations(data)
     }
-    fetchData()
-  }, [])
+  });
 
 
   const columns = [
@@ -102,6 +100,7 @@ const Reservations = () => {
             <Table 
               tableLayout='auto' 
               bordered 
+              loading={reservationLoading}
               columns={columns} 
               dataSource={reservations}
               pagination={{

@@ -7,7 +7,7 @@ import Promo from "../pages/Promo"
 import NoMatch from "../pages/NoMatch"
 import { AuthProvider } from "../context/auth"
 import AddUser from "../pages/AddUser"
-import Contacts from "../pages/Contats"
+import Contacts from "../pages/Contacts"
 
 const AuthRoutes = () => {
   return (
