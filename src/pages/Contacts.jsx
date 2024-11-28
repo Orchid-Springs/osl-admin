@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Table } from "antd";
+import { Button, Input, Table } from "antd";
 import dayjs from "dayjs";
 import EmailLink from "../components/EmailLink";
 import { useFetchData } from "../hooks/useQueries";
@@ -8,7 +8,7 @@ const Contacts = () => {
   const [searchText, setSearchText] = useState("");
   const [contacts, setContacts] = useState([]);
 
-  const { isLoading } = useFetchData("/contact", {
+  const { isLoading, refetch } = useFetchData("/contact", {
     onSuccess: (data) => {
       setContacts(data);
     },
@@ -51,20 +51,20 @@ const Contacts = () => {
       dataIndex: "subject",
       key: "_id",
     },
-    {
-      title: "Messages",
-      dataIndex: "message",
-      key: "_id",
-      render: (msgs) =>
-        msgs?.map((msg, i) => (
-          <>
-            <p key={i} className="text-xs">
-              {msg}
-            </p>{" "}
-            <br></br>
-          </>
-        )),
-    },
+    // {
+    //   title: "Messages",
+    //   dataIndex: "message",
+    //   key: "_id",
+    //   render: (msgs) =>
+    //     msgs?.map((msg, i) => (
+    //       <>
+    //         <p key={i} className="text-xs">
+    //           {msg}
+    //         </p>{" "}
+    //         <br></br>
+    //       </>
+    //     )),
+    // },
     {
       title: "Date",
       dataIndex: "updatedAt",
@@ -80,9 +80,10 @@ const Contacts = () => {
   ];
   return (
     <div className="bg-white p-5">
-      <div className="w-[80%] p-3">
+      <div className="w-[80%] p-3 flex items-center gap-4">
         <Input.Search
           placeholder="Search here..."
+          size="large"
           onSearch={(value) => {
             setSearchText(value);
           }}
@@ -90,6 +91,7 @@ const Contacts = () => {
             setSearchText(e.target.value);
           }}
         />
+        <Button onClick={refetch}>Refresh</Button>
       </div>
       <Table
         tableLayout="auto"

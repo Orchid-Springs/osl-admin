@@ -68,6 +68,7 @@ const Login = () => {
               htmlType="submit"
               className="bg-[#FFA903] hover:bg-[#010D33] h-[40px] text-lg uppercase text-white"
               loading={loading}
+              size="large"
               block
             >
               Login
