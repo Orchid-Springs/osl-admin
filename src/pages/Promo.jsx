@@ -60,7 +60,6 @@ const Promo = () => {
   const showEditModal = async (code) => {
     try {
       const { data } = await api.get(`/promo/${code}`);
-
       if (data) {
         editForm.setFieldsValue({
           discountPercentage: data?.discountPercentage,
@@ -183,6 +182,7 @@ const Promo = () => {
         <div className="w-[80%] p-3 flex gap-4">
           <Input.Search
             placeholder="Search here..."
+            size="large"
             onSearch={(value) => {
               setSearchText(value);
             }}
@@ -190,7 +190,9 @@ const Promo = () => {
               setSearchText(e.target.value);
             }}
           />
-          <Button onClick={showAddModal}>Add New</Button>
+          <Button onClick={showAddModal} className="bg-[#4096ff] text-white">
+            Add New
+          </Button>
         </div>
         <Table
           bordered
@@ -207,9 +209,12 @@ const Promo = () => {
         onOk={handleAddOk}
         onCancel={handleAddCancel}
         okType="default"
+        okButtonProps={{
+          className: "bg-primary text-white hover:text-white",
+        }}
         confirmLoading={addLoading}
       >
-        <Form layout="horizontal" form={addForm}>
+        <Form layout="vertical" form={addForm}>
           <Form.Item
             label="Code"
             name="code"
@@ -261,7 +266,7 @@ const Promo = () => {
               },
             ]}
           >
-            <DatePicker />
+            <DatePicker placement="bottomRight" />
           </Form.Item>
         </Form>
       </Modal>

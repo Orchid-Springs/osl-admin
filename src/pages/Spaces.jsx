@@ -111,7 +111,7 @@ const Spaces = () => {
     setEditLoading(false);
   };
 
-  const { isLoading: isGettingSpace } = useFetchData("/space", {
+  const { isLoading: isGettingSpace, refetch } = useFetchData("/space", {
     onSuccess: (data) => {
       setSpaces(data);
     },
@@ -192,9 +192,10 @@ const Spaces = () => {
   return (
     <>
       <div className="bg-white p-5">
-        <div className="w-[80%] p-3 flex gap-4">
+        <div className="w-[80%] p-3 flex items-center gap-4">
           <Input.Search
             placeholder="Search here..."
+            size="large"
             onSearch={(value) => {
               setSearchText(value);
             }}
@@ -202,7 +203,14 @@ const Spaces = () => {
               setSearchText(e.target.value);
             }}
           />
-          <Button onClick={showAddModal}>Add New</Button>
+          <Button
+            onClick={showAddModal}
+            type="primary"
+            className="bg-[#4096ff] text-white"
+          >
+            Add New
+          </Button>
+          <Button onClick={refetch}>Refresh</Button>
         </div>
         <Table
           bordered

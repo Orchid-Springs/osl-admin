@@ -7,6 +7,7 @@ import {
   UserOutlined,
   SettingOutlined,
   MailOutlined,
+  AuditOutlined,
 } from "@ant-design/icons";
 import favicon from "../assets/favicon.png";
 
@@ -57,9 +58,14 @@ const Admin = () => {
       "4",
       <FundProjectionScreenOutlined />
     ),
-    getItem(<Link to="/contacts">Contacts</Link>, "5", <MailOutlined />),
+    getItem(
+      <Link to="/promo-details">Promo Details</Link>,
+      "5",
+      <AuditOutlined />
+    ),
+    getItem(<Link to="/contacts">Contacts</Link>, "6", <MailOutlined />),
     auth.user.role === "super_admin"
-      ? getItem(<Link to="/user">Users</Link>, "6", <UserOutlined />)
+      ? getItem(<Link to="/user">Users</Link>, "7", <UserOutlined />)
       : " ",
   ];
 
